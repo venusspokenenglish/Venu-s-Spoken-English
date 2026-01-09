@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PS Test 1 – Venu's Spoken English</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI, Arial;
+  background:#ffffff;
+  color:#222;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 25px;
+  border-bottom:3px solid #1e73d8;
+}
+
+.left-title{
+  font-size:22px;
+  font-weight:700;
+  color:#1e73d8;
+}
+
+.center-title{
+  text-align:center;
+  flex:1;
+}
+
+.center-title h1{
+  margin:0;
+  font-size:38px;
+  color:#000;
+}
+
+.right-logo{
+  text-align:center;
+}
+
+.right-logo img{
+  height:55px;
+}
+
+.tagline{
+  font-size:12px;
+  font-weight:600;
+  margin-top:4px;
+}
+
+.container{
+  max-width:950px;
+  margin:20px auto;
+  padding:10px;
+}
+
+.student-box{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.student-box input{
+  padding:14px;
+  border-radius:12px;
+  border:2px solid #1e73d8;
+  font-size:16px;
+}
+
+.question{
+  margin-bottom:22px;
+}
+
+.question label{
+  display:block;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.question input{
+  width:100%;
+  padding:18px;
+  border-radius:16px;
+  border:2px solid #1e73d8;
+  font-size:16px;
+}
+
+button{
+  width:100%;
+  padding:18px;
+  font-size:18px;
+  background:#1e73d8;
+  color:#fff;
+  border:none;
+  border-radius:16px;
+  cursor:pointer;
+}
+
+button:hover{background:#155bb0;}
+
+.result{
+  display:none;
+  margin-top:30px;
+}
+
+.correct{
+  background:#e8f7ec;
+  border-left:6px solid #2e8b57;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:12px;
+}
+
+.wrong{
+  background:#fdeaea;
+  border-left:6px solid #d9534f;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:12px;
+}
+
+.share{
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="left-title">PS Test 1</div>
+
+  <div class="center-title">
+    <h1>Venu’s Spoken English</h1>
+  </div>
+
+  <div class="right-logo">
+    <img src="logo.png">
+    <div class="tagline">Your SPOKEN ENGLISH Expert</div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="student-box">
+  <input id="sname" placeholder="Student Name">
+  <input id="sphone" placeholder="Mobile Number">
+</div>
+
+<div id="questions"></div>
+
+<button onclick="submitTest()">Submit Test</button>
+
+<div class="result" id="result"></div>
+<div class="share" id="share"></div>
+
+</div>
+
+<script>
+const questions=[
+"నేను ఇంగ్లీష్ మాట్లాడగలను.",
+"నేను ఇంగ్లీష్ మాట్లాడగలిగే వాడిని.",
+"నేను ఇంగ్లీష్ మాట్లాడితే బాగుంటుంది.",
+"ఆమె ఇంగ్లీష్ మాట్లాడొచ్చు మాట్లాడకపోవచ్చు.",
+"వాళ్ళు చాలా వరకు ఇంగ్లీష్ మాట్లాడకపోవచ్చు.",
+"మేము ఇంగ్లీష్ మాట్లాడాల్సిన అవసరం ఉంది.",
+"వాళ్ళు ఒకప్పుడు ఇంగ్లీష్ మాట్లాడేవాళ్ళు.",
+"నేను తప్పకుండా ఇంగ్లీష్ మాట్లాడాలి.",
+"మాకు ఇంగ్లీష్ మాట్లాడాలి అనే కోరిక ఉంది.",
+"అతను ఇంగ్లీష్ మాట్లాడతాడు.",
+"వాళ్ళు ఇంగ్లీష్ మాట్లాడతారు.",
+"నేను ఇంగ్లీష్ మాట్లాడాను.",
+"మేము తర్వాత ఇంగ్లీష్ మాట్లాడతాము.",
+"నేను ఇప్పుడు ఇంగ్లీష్ మాట్లాడుతూ ఉన్నాను.",
+"ఆమె ఇప్పుడు ఇంగ్లీష్ మాట్లాడుతూ ఉంది.",
+"వాళ్ళు ఇప్పుడు ఇంగ్లీష్ మాట్లాడుతూ ఉన్నారు.",
+"ఆమె ఒకప్పుడు ఇంగ్లీష్ మాట్లాడుతూ ఉండేది.",
+"వాళ్ళు ఒకప్పుడు ఇంగ్లీష్ మాట్లాడుతూ ఉండేవారు.",
+"మేము తర్వాత ఇంగ్లీష్ మాట్లాడుతూ ఉంటాము.",
+"ఆమెకు ఇప్పుడు ఇంగ్లీష్ క్లాస్ ఉంది.",
+"వాళ్ళకు ఇప్పుడు ఇంగ్లీష్ క్లాస్ ఉంది.",
+"మాకు ఒకప్పుడు ఇంగ్లీష్ క్లాస్ ఉన్నింది.",
+"స్టూడెంట్స్ కి తర్వాత ఇంగ్లీష్ క్లాస్ ఉంటుంది.",
+"నేను ఇప్పుడు సంతోషంగా ఉన్నాను.",
+"ఆమె ఇప్పుడు busy గా ఉంది.",
+"వాళ్ళు ఇప్పుడు energetic గా ఉన్నారు.",
+"అతను ఒకప్పుడు friendly గా ఉండేవాడు.",
+"వాళ్ళు ఒకప్పుడు ముంబైలో ఉండేవారు.",
+"మేము తర్వాత rich గా ఉంటాము.",
+"స్టూడెంట్స్ clear గా ఇంగ్లీష్ మాట్లాడతారు."
+];
+
+const answers=[
+"I can speak English",
+"I could speak English",
+"I should speak English",
+"She may speak English",
+"They might speak English",
+"We need to speak English",
+"They used to speak English",
+"I must speak English",
+"We want to speak English",
+"He speaks English",
+"They speak English",
+"I spoke English",
+"We will speak English",
+"I am speaking English",
+"She is speaking English",
+"They are speaking English",
+"She was speaking English",
+"They were speaking English",
+"We will be speaking English",
+"She has an English class",
+"They have an English class",
+"We had an English class",
+"Students will have an English class",
+"I am happy",
+"She is busy",
+"They are energetic",
+"He was friendly",
+"They were in Mumbai",
+"We will be rich",
+"Students speak English clearly"
+];
+
+const qDiv=document.getElementById("questions");
+questions.forEach((q,i)=>{
+ qDiv.innerHTML+=`
+ <div class="question">
+   <label>${i+1}. ${q}</label>
+   <input id="a${i}">
+ </div>`;
+});
+
+function clean(t){
+ return t.toLowerCase().replace(/[^a-z ]/g,'').trim();
+}
+
+function submitTest(){
+ let name=sname.value||"Not given";
+ let phone=sphone.value||"Not given";
+ let res=document.getElementById("result");
+ let share=document.getElementById("share");
+ res.style.display="block";
+ res.innerHTML=`<h3>Student: ${name} | ${phone}</h3>`;
+ let score=0;
+ let msg=`PS Test 1 Result\nName: ${name}\nPhone: ${phone}\n\n`;
+
+ answers.forEach((ans,i)=>{
+  let ua=document.getElementById("a"+i).value;
+  let ok=clean(ua)==clean(ans);
+  if(ok) score++;
+  res.innerHTML+= ok
+   ? `<div class="correct">${i+1}. ✔ Correct<br>Student Answer: ${ua||"(no answer)"}</div>`
+   : `<div class="wrong">${i+1}. ✖ Grammar mistake<br>Student Answer: ${ua||"(no answer)"}<br>Correct Answer: ${ans}</div>`;
+  msg+=`${i+1}. ${ok?"Correct":"Wrong"}\nStudent: ${ua||"-"}\nCorrect: ${ans}\n\n`;
+ });
+
+ res.innerHTML+=`<h3>Score: ${score}/${answers.length}</h3>`;
+
+ const waURL="https://wa.me/917013122351?text="+encodeURIComponent(msg);
+ share.innerHTML=`<button onclick="shareWhatsApp('${waURL}')">Share Result on WhatsApp</button>`;
+}
+
+function shareWhatsApp(url){
+ window.open(url,"_blank");
+}
+</script>
+
+</body>
+</html>
